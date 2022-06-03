@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Character } from './character';
+import { CharacterApi, CharacterResult } from './character.interface';
+import { map, Observable } from 'rxjs';
 
 const URL_BASE = 'https://rickandmortyapi.com/api/character/'
 
@@ -11,7 +12,6 @@ export class RickAndMortyService {
 
   constructor(private http: HttpClient) { }
 
-  character : Character;
 
   getCharacter(n: number){
     return this.http.get(`${URL_BASE}${n}`);
@@ -21,16 +21,16 @@ export class RickAndMortyService {
     return this.http.get(URL_BASE);
   }
 
-  // obtenerPersonaje() {
-  //     return new Promise(
-  //       (resolve,reject) => {
-  //         if (this.character.name){
-  //           return resolve ([{RickAndMortyService:this.character.name}])
-  //         }
-  //         return reject ({message:'error: character not found'})
-  //       }
+    getData(url: string): Observable<any>{
+      return this.http.get(url);
+  }
+
+  getRickAndMortyCharacters(): Observable<CharacterResult[]> {
+      return this.http.get<CharacterApi>("https://rickandmortyapi.com/api/character")
+      .pipe(map((apiResult: any) =>
+          apiResult.result
+      ));
+  }
+}
 
 
-    //   )}
-    
-     }

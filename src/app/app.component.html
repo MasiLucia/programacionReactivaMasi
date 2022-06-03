@@ -1,11 +1,11 @@
 <h1>R&M</h1>
 
-<div *ngIf="character">
+<div *ngIf="characterSubs">
 <h3>{{character.name}}</h3>
 <img src="{{character.image}}" alt="">
 </div>
 
-<div *ngIf="characterO$ | async as ch">
+<div *ngIf="mortyObs | async as ch">
   <h3>{{ch.name}}</h3>
   <img src="{{ch.image}}" alt="">
   </div>

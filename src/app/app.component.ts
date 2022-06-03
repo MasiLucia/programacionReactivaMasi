@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { RickAndMortyService } from './rick-and-morty.service';
 import { fromEvent, Observable, Subject, Subscription} from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Character } from './character';
+import { CharacterApi, CharacterResult } from './character.interface';
+import { HttpClient } from '@angular/common/http';
 
 
 @Component({
@@ -12,51 +13,103 @@ import { Character } from './character';
 })
 export class AppComponent implements OnInit{
   title = 'programacionReactivaMasi';
-  character$:Subscription
+
+  characterSubs:Subscription;
   character:any;
-  characterO$:Observable<any>
-
-  // promesa
-  ch = new Character('Morty');
-
+  mortyObs :Observable<any>
+  personajes: CharacterResult[];
+  // characters:any
 
 
-  constructor(private rickAndMortyService: RickAndMortyService){
-    this.characterO$ = this.rickAndMortyService.getCharacter(2);
-    this.character$ = this.rickAndMortyService.getCharacter(1)
-    .pipe(
-      map((x:any)=> {
-        return {name: x.name, image: x.image}
-      })
-    )
-    .subscribe(
-      (character) => {
-        this.character = character;
-      }
-    )
+  constructor(private rickAndMortyService: RickAndMortyService,   private http: HttpClient
+    ){
 
-    let subject = new Subject();
-    let click$ = fromEvent(document, 'click');
-    subject.subscribe(
-      (val:any)=> console.log('Primer' + val.type)
-      )
-      subject.subscribe(
-        (val:any)=>console.log('Segundo' + val.type)
-      )
-        click$.subscribe(subject);
+      this.comoVosQuieras();
 
-  }
 
+    // this.character$ = this.rickAndMortyService.getRickAndMortyCharacters();
+    // this.character$.pipe(map((character:any)=> {
+    //   this.characters.push(character)
+    // })).subscribe(()=>{})
+
+
+
+}
 
 
   ngOnInit(): void {
 
-   this.ch.obtenerPersonaje()
- .then((val:any)=>console.log(val))
-   .catch((error:any)=>console.log(error.message))
-  }
+      this.siExisten();
+      this.rickAndMortyService.getRickAndMortyCharacters();
+      console.log(this.rickAndMortyService.getRickAndMortyCharacters())
+
+
+
+
 
 }
+
+
+
+comoVosQuieras(){
+
+  this.mortyObs = this.rickAndMortyService.getCharacter(2);
+  console.log("aca va el observable" + this.mortyObs);
+
+
+  console.log(this.characterSubs);
+
+  this.characterSubs = this.rickAndMortyService.getCharacter(1)
+  .pipe(
+    map((x:any)=> {
+      return {name: x.name, image: x.image}
+    })
+  )
+  .subscribe(
+    (character) => {
+      this.character = character;
+    }
+  )
+
+
+
+
+
+
+  let subject = new Subject();
+  let click$ = fromEvent(document, 'click');
+  subject.subscribe(
+    (val:any)=> console.log('Primer' + val.type)
+    )
+    subject.subscribe(
+      (val:any)=>console.log('Segundo' + val.type)
+    )
+      click$.subscribe(subject);
+
+
+  }
+
+
+
+existePersonaje() {
+  return new Promise((resolve, reject)=> {
+    if(this.rickAndMortyService.getCharacter(1)) {
+      return resolve(this.rickAndMortyService.getCharacter(1)) ;
+      } else {
+
+      return reject({message : 'no se encontraron personajes'}) }
+    })
+
+}
+
+
+siExisten(){
+  this.existePersonaje().then((x: any)=>{
+    console.log("termino");
+    console.log(x);
+
+  }).catch((error)=> console.log(error))
+
 
 
 
@@ -67,9 +120,6 @@ export class AppComponent implements OnInit{
 //        }
 
 
+}
 
-
-
-
-
-
+}
