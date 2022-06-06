@@ -24,7 +24,7 @@ export class AppComponent implements OnInit{
   constructor(private rickAndMortyService: RickAndMortyService,   private http: HttpClient
     ){
 
-      this.comoVosQuieras();
+      this.llamadoPersonajes();
 
 
     // this.character$ = this.rickAndMortyService.getRickAndMortyCharacters();
@@ -51,7 +51,7 @@ export class AppComponent implements OnInit{
 
 
 
-comoVosQuieras(){
+llamadoPersonajes(){
 
   this.mortyObs = this.rickAndMortyService.getCharacter(2);
   console.log("aca va el observable" + this.mortyObs);
