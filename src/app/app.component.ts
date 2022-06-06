@@ -17,7 +17,9 @@ export class AppComponent implements OnInit{
   characterSubs:Subscription;
   character:any;
   mortyObs :Observable<any>
-  personajes: CharacterResult[];
+  personajes = this.rickAndMortyService.getRickAndMortyCharacters();
+
+
   // characters:any
 
 
@@ -25,6 +27,7 @@ export class AppComponent implements OnInit{
     ){
 
       this.llamadoPersonajes();
+
 
 
     // this.character$ = this.rickAndMortyService.getRickAndMortyCharacters();
@@ -41,7 +44,6 @@ export class AppComponent implements OnInit{
 
       this.siExisten();
       this.rickAndMortyService.getRickAndMortyCharacters();
-      console.log(this.rickAndMortyService.getRickAndMortyCharacters())
 
 
 
@@ -93,8 +95,8 @@ llamadoPersonajes(){
 
 existePersonaje() {
   return new Promise((resolve, reject)=> {
-    if(this.rickAndMortyService.getCharacter(1)) {
-      return resolve(this.rickAndMortyService.getCharacter(1)) ;
+    if(this.personajes) {
+      return resolve(this.personajes) ;
       } else {
 
       return reject({message : 'no se encontraron personajes'}) }
