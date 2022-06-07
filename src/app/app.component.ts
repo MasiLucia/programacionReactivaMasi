@@ -16,30 +16,25 @@ export class AppComponent implements OnInit{
   characterSubs:Subscription;
   character:any;
   mortyObs :Observable<any>
-  personajes :any;
+  ejemplo = this.rickAndMortyService.getData("https://rickandmortyapi.com/api/character");
 
 
   constructor(private rickAndMortyService: RickAndMortyService,   private http: HttpClient
     ){
 
       this.llamadoPersonajes();
-      this.personajes =  this.rickAndMortyService.getCharacter(2)
-
-      console.log("son los pjs" + this.personajes)
-
-
-
-    // this.character$ = this.rickAndMortyService.getRickAndMortyCharacters();
-    // this.character$.pipe(map((character:any)=> {
-    //   this.characters.push(character)
-    // })).subscribe(()=>{})
-
-
+      this.ejemplo =  this.rickAndMortyService.getRickAndMortyCharacters();
 
 }
 
 
   ngOnInit(): void {
+
+    console.log(this.ejemplo);
+    this.rickAndMortyService.getData("https://rickandmortyapi.com/api/character").subscribe((data: Observable<any>) => {
+      console.log(data);
+
+    });
 
       this.siExisten();
       this.rickAndMortyService.getRickAndMortyCharacters();
@@ -81,14 +76,15 @@ llamadoPersonajes(){
 
 existePersonaje() {
   return new Promise((resolve, reject)=> {
-    if(this.personajes) {
-      return resolve(this.personajes) ;
+    if(this.ejemplo) {
+      return resolve(this.ejemplo.forEach((x: any)=>{
+        console.log(x);
+      }) );
       } else {
 
-      return reject({message : 'no se encontraron personajes'}) }
-    })
-
-}
+      return reject({message : 'no se encontraros.ejemplo'}) }
+    });
+  }
 
 
 siExisten(){
