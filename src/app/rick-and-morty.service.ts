@@ -17,6 +17,7 @@ export class RickAndMortyService {
     return this.http.get(`${URL_BASE}${n}`);
   }
 
+
   get(){
     return this.http.get(URL_BASE);
   }

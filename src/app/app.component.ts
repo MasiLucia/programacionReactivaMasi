@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { RickAndMortyService } from './rick-and-morty.service';
 import { fromEvent, Observable, Subject, Subscription} from 'rxjs';
 import { map } from 'rxjs/operators';
-import { CharacterApi, CharacterResult } from './character.interface';
 import { HttpClient } from '@angular/common/http';
 
 
@@ -17,16 +16,16 @@ export class AppComponent implements OnInit{
   characterSubs:Subscription;
   character:any;
   mortyObs :Observable<any>
-  personajes = this.rickAndMortyService.getRickAndMortyCharacters();
-
-
-  // characters:any
+  personajes :any;
 
 
   constructor(private rickAndMortyService: RickAndMortyService,   private http: HttpClient
     ){
 
       this.llamadoPersonajes();
+      this.personajes =  this.rickAndMortyService.getCharacter(2)
+
+      console.log("son los pjs" + this.personajes)
 
 
 
@@ -44,11 +43,6 @@ export class AppComponent implements OnInit{
 
       this.siExisten();
       this.rickAndMortyService.getRickAndMortyCharacters();
-
-
-
-
-
 }
 
 
@@ -56,10 +50,6 @@ export class AppComponent implements OnInit{
 llamadoPersonajes(){
 
   this.mortyObs = this.rickAndMortyService.getCharacter(2);
-  console.log("aca va el observable" + this.mortyObs);
-
-
-  console.log(this.characterSubs);
 
   this.characterSubs = this.rickAndMortyService.getCharacter(1)
   .pipe(
@@ -72,11 +62,6 @@ llamadoPersonajes(){
       this.character = character;
     }
   )
-
-
-
-
-
 
   let subject = new Subject();
   let click$ = fromEvent(document, 'click');
@@ -92,6 +77,7 @@ llamadoPersonajes(){
   }
 
 
+// promesa
 
 existePersonaje() {
   return new Promise((resolve, reject)=> {
@@ -107,7 +93,6 @@ existePersonaje() {
 
 siExisten(){
   this.existePersonaje().then((x: any)=>{
-    console.log("termino");
     console.log(x);
 
   }).catch((error)=> console.log(error))
